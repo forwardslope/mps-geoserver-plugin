@@ -40,21 +40,15 @@ public class MPSResource extends AbstractResource {
 
 	@Override
 	public void handleGet() {
-		//get the appropriate format
-		Context context = getContext();
-		Logger logger = context.getLogger();
-
+		Logger logger = getContext().getLogger();
 		Request request = this.getRequest();		
 
-		Reference rootRef = request.getRootRef();
 		Reference resourceRef = request.getResourceRef();
 		String query = resourceRef.getQuery();
 		String path = resourceRef.getPath();
 		
 		Map<String, String> queryParamMap = createQueryParamMap(query);
-		logger.info("MPS Query Params: " + query);
-
-//		String relativePath = resourceRef.toString().substring(rootRef.toString().length());
+		logger.info("MPS Query Params: " + queryParamMap.toString());
 
 		// TODO: get ssoidcookie
 
