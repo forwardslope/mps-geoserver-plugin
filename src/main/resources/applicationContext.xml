@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<bean id="mpsResource" class="mil.navy.geomap.plugin.MPSResource" scope="prototype">
+		<property name="mps">
+			<ref bean="mpsImpl"/>
+		</property>
+	</bean>
+	
+	<bean id="mpsImpl" class="mil.navy.geomap.mps.impl.MPSMockImpl" scope="prototype" />
+
+	<bean id="mpsMapping" class="org.geoserver.rest.RESTMapping">
+		<property name="routes">
+			<map>
+				<entry>
+					<key>
+						<value>/mps/get-role</value>
+					</key>
+					<value>mpsResource</value>
+				</entry>
+				<entry>
+					<key>
+						<value>/mps/get-bookmark</value>
+					</key>
+					<value>mpsResource</value>
+				</entry>
+				<entry>
+					<key>
+						<value>/mps/load-features</value>
+					</key>
+					<value>mpsResource</value>
+				</entry>
+			</map>	
+		</property>
+	</bean>
+
+</beans>
