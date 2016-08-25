@@ -1,21 +1,25 @@
 package mil.navy.geomap.plugin;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import mil.navy.geomap.mps.api.MPS;
 
+import org.apache.commons.io.IOUtils;
 import org.geoserver.rest.AbstractResource;
 import org.geoserver.rest.format.DataFormat;
 import org.geoserver.rest.format.StringFormat;
-import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.resource.Representation;
 
 public class MPSResource extends AbstractResource {
 
@@ -36,6 +40,25 @@ public class MPSResource extends AbstractResource {
 		formats.add(new StringFormat( MediaType.APPLICATION_XML ));
 
 		return formats;
+	}
+	
+	@Override
+	public boolean allowPost() {
+		return true;
+	}
+	
+	@Override
+	public void handlePost() {
+		Request request = this.getRequest();
+		Logger logger = getContext().getLogger();
+		Representation entity = request.getEntity();
+		try {
+			InputStream stream = entity.getStream();
+			String string = IOUtils.toString(stream);
+			logger.info("GOT IT!: " + string);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Bummer", e);
+		}
 	}
 
 	@Override
