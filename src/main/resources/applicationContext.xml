@@ -1,38 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-<beans>
-	<bean id="mpsResource" class="mil.navy.geomap.plugin.MPSResource" scope="prototype">
-		<property name="mps">
-			<ref bean="mpsImpl"/>
-		</property>
-	</bean>
-	
-	<bean id="mpsImpl" class="mil.navy.geomap.mps.impl.MPSMockImpl" scope="prototype" />
-
-	<bean id="mpsMapping" class="org.geoserver.rest.RESTMapping">
-		<property name="routes">
-			<map>
-				<entry>
-					<key>
-						<value>/mps/get-role</value>
-					</key>
-					<value>mpsResource</value>
-				</entry>
-				<entry>
-					<key>
-						<value>/mps/get-bookmark</value>
-					</key>
-					<value>mpsResource</value>
-				</entry>
-				<entry>
-					<key>
-						<value>/mps/load-features</value>
-					</key>
-					<value>mpsResource</value>
-				</entry>
-			</map>	
-		</property>
-	</bean>
+	<mvc:annotation-driven />
+	<context:component-scan base-package="mil.navy.geomap.plugin" />
 
 </beans>
+
