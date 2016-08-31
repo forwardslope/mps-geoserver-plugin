@@ -1,4 +1,4 @@
-package mil.navy.geomap.plugin;
+package com.fsi.geomap.plugin;
 
 import java.io.IOException;
 
