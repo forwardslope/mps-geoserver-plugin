@@ -6,7 +6,7 @@
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
 
 	<mvc:annotation-driven />
-	<context:component-scan base-package="com.fsi.geomap" />
 	<bean id="wfsClient" class="com.fsi.mps.geoserver.catalog.WfsCatalogClient"/>
+	<bean id="mpsFeatureListener" class="com.fsi.geomap.service.MpsFeatureListenerImpl"/>
 </beans>
 

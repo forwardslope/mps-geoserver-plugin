@@ -29,15 +29,19 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 
 	private static final Logger log = Logger.getLogger(WfsCatalogClient.class.getName());
 	
-	@Override
 	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatures(GetFeature getFeature) {
+		return getFeatures(getFeature, false);
+		
+	}
+
+	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatures(GetFeature getFeature, boolean supportPaging) {
 		Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
 		if (catalog != null) {
 			for (com.fsi.geomap.mps.wfsclient.Query sourceQuery : getFeature.getQueries()) {
 				Query query = new Query();
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
-				if (getFeature.getMaxFeatures() >= 0) {
+				if (!supportPaging && getFeature.getMaxFeatures() >= 0) {
 					query.setMaxFeatures((int)getFeature.getMaxFeatures());
 				}
 				for(TypeName typeName : sourceQuery.getTypeName()) {
@@ -62,8 +66,11 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 	}
 
 
-	@Override
 	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(FeatureType featureType, GetFeature getFeature) {
+		return getFeatures(featureType, getFeature, false);
+	}
+
+	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(FeatureType featureType, GetFeature getFeature, boolean supportPaging) {
 		FeatureCollection<? extends FeatureType, ? extends Feature> featureCollection = null;
 		if (catalog != null) {
 			Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
@@ -73,7 +80,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 				Query query = new Query();
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
-				if (getFeature.getMaxFeatures() >= 0) {
+				if (!supportPaging && getFeature.getMaxFeatures() >= 0) {
 					query.setMaxFeatures((int)getFeature.getMaxFeatures());
 				}
 				if (sourceQuery.getTypeName().size() == 1) {
@@ -99,7 +106,6 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 		return featureCollection;
 	}
 
-	@Override
 	public void setApplicationContext(ApplicationContext context)
 			throws BeansException {
 		this.catalog = context.getBean("catalog", Catalog.class);
