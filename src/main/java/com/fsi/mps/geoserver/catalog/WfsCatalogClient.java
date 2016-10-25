@@ -77,7 +77,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 			List<com.fsi.geomap.mps.wfsclient.Query> sourceQueries = getFeature.getQueries();
 			if (sourceQueries.size() == 1) {
 				com.fsi.geomap.mps.wfsclient.Query sourceQuery = sourceQueries.get(0);
-				Query query = new Query();
+				Query query = new Query(getFeature.getQueries().get(0).getTypeName().get(0).getName().getLocalPart());
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
 				if (!supportPaging && getFeature.getMaxFeatures() >= 0) {
