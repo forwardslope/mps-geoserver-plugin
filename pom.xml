@@ -18,6 +18,8 @@
 		<geoserver.version>2.9.1</geoserver.version>
 		<geomesa.version>1.2.2</geomesa.version>
 		<j2ee.version>6.0</j2ee.version>
+		<maven-release-plugin.version>2.4.2</maven-release-plugin.version>
+		<maven-scm-provider-gitexe.version>1.8.1</maven-scm-provider-gitexe.version>
 	</properties>
 
 	<dependencies>
@@ -71,6 +73,24 @@
 			<artifactId>geomesa-utils</artifactId>
 			<version>${geomesa.version}</version>
 		</dependency>
+		
+		<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven-release-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.scm</groupId>
+							<artifactId>maven-scm-provider-gitexe</artifactId>
+							<version>${maven-scm-provider-gitexe.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	</dependencies>
 
