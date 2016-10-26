@@ -73,8 +73,10 @@
 			<artifactId>geomesa-utils</artifactId>
 			<version>${geomesa.version}</version>
 		</dependency>
-		
-		<build>
+
+	</dependencies>
+	
+	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -91,7 +93,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	</dependencies>
 
 </project>
