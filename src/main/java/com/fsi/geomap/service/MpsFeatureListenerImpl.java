@@ -17,8 +17,11 @@ import org.geotools.data.FeatureListener;
 import org.geotools.data.FeatureSource;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.NameImpl;
+import org.locationtech.geomesa.kafka.KafkaFeatureEvent;
 import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
 import org.springframework.context.ApplicationContext;
@@ -77,40 +80,57 @@ public class MpsFeatureListenerImpl implements MpsFeatureListener {
 					logger.log(Level.INFO, "Received FeatureEvent from layer " + name.getURI() + " of Type: "
 							+ featureEvent.getType());
 					if (featureEvent.getType() == FeatureEvent.Type.CHANGED) {
-						FeatureSource<? extends FeatureType, ? extends Feature> featureSource = featureEvent.getFeatureSource();
-						FeatureCollection<? extends FeatureType, ? extends Feature> featureCollection = null;
-						try {
-							featureCollection = featureSource.getFeatures(featureEvent.getFilter());
-							FeatureIterator<? extends Feature> featureIterator = featureCollection.features();
-							while (featureIterator.hasNext()) {
-								Feature feature = featureIterator.next();
-								if (logger.isLoggable(Level.FINEST)) {
-									printFeature(feature);
-								}
-								try {
-									if (name != null) {
-										logger.log(Level.FINER,
-												"Received CHANGED notification event for " + name.getURI() + "!");
-										notifier.processNotification(name, feature);
-										logger.log(Level.FINER, "Processed CHANGED notification event for " + name + "!");
+						if (featureEvent instanceof KafkaFeatureEvent) {
+		                	SimpleFeature feature = ((KafkaFeatureEvent) featureEvent).feature();
+		                	if (logger.isLoggable(Level.FINEST)) {
+		                		printFeature(feature);
+		                	}
+		                    Name name = new NameImpl(feature.getFeatureType().getName().getNamespaceURI(), feature.getFeatureType().getName().getLocalPart());
+							try {
+								logger.log(Level.FINER,
+										"Received Kafka CHANGED notification event for " + name.getURI() + "!");
+								notifier.processNotification(name, feature);
+								logger.log(Level.FINEST, "Processed CHANGED Kafka notification event for " + name + "!");
+							} catch (Exception e) {
+								logger.log(Level.WARNING, "Error processing Kafka CHANGED Notification! "
+										+ (e.getMessage() != null ? e.getMessage() : ""), e);
+							}
+						} else {
+							FeatureSource<? extends FeatureType, ? extends Feature> featureSource = featureEvent.getFeatureSource();
+							FeatureCollection<? extends FeatureType, ? extends Feature> featureCollection = null;
+							try {
+								featureCollection = featureSource.getFeatures(featureEvent.getFilter());
+								FeatureIterator<? extends Feature> featureIterator = featureCollection.features();
+								while (featureIterator.hasNext()) {
+									Feature feature = featureIterator.next();
+									if (logger.isLoggable(Level.FINEST)) {
+										printFeature(feature);
 									}
-								} catch (Exception e) {
-									logger.log(Level.WARNING, "Error processing Kafka CHANGED Notification! "
-											+ (e.getMessage() != null ? e.getMessage() : ""), e);
+									try {
+										if (name != null) {
+											logger.log(Level.FINER,
+													"Received non-Kafka CHANGED notification event for " + name.getURI() + "!");
+											notifier.processNotification(name, feature);
+											logger.log(Level.FINEST, "Processed CHANGED non-Kafka notification event for " + name + "!");
+										}
+									} catch (Exception e) {
+										logger.log(Level.WARNING, "Error processing non-Kafka CHANGED Notification! "
+												+ (e.getMessage() != null ? e.getMessage() : ""), e);
+									}
 								}
-							}
-	
-							if (featureEvent.getType() == FeatureEvent.Type.REMOVED) {
-								logger.log(Level.FINE,
-										"Received DELETE notification for filter: " + featureEvent.getFilter());
-								if (name != null) {
-									notifier.processDeleteNotification(name, featureEvent.getFilter());
-									logger.log(Level.FINEST, "Processed DELETE notification event!");
+		
+								if (featureEvent.getType() == FeatureEvent.Type.REMOVED) {
+									logger.log(Level.FINE,
+											"Received DELETE notification for filter: " + featureEvent.getFilter());
+									if (name != null) {
+										notifier.processDeleteNotification(name, featureEvent.getFilter());
+										logger.log(Level.FINEST, "Processed DELETE notification event!");
+									}
 								}
+							} catch (IOException e) {
+								logger.log(Level.WARNING, "Error processing notification", e);
+								
 							}
-						} catch (IOException e) {
-							logger.log(Level.WARNING, "Error processing notification", e);
-							
 						}
 					}
 				}
