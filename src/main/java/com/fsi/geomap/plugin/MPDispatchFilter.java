@@ -17,7 +17,7 @@ public class MPDispatchFilter extends AdvancedDispatchFilter {
             throws IOException, ServletException {
         if (request instanceof HttpServletRequest) {
         	String path = ((HttpServletRequest) request).getPathInfo();
-        	if (path.indexOf("/mps") == 0) { // if this is an MPS request, bypass GeoServer filtering
+        	if (path != null && path.indexOf("/mps") == 0) { // if this is an MPS request, bypass GeoServer filtering
                 chain.doFilter(request, response);
         	} else {
                 super.doFilter(request, response, chain); // perform GeoServer filtering
