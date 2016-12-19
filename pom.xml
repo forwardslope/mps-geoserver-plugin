@@ -92,5 +92,23 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<repositories>
+		<repository>
+			<id>boundless-geo</id>
+			<url>http://repo.boundlessgeo.com/main/</url>
+		</repository>
+		<repository>
+			<id>webdav-geotools</id>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+		<repository>
+            <id>acs-di2e-releases</id>
+            <name>ACS DI2E Release Repository</name>
+            <url>
+                https://nexus.di2e.net/nexus/content/repositories/Private_ACS3_Releases/
+            </url>
+        </repository>
+	</repositories>
 
 </project>
