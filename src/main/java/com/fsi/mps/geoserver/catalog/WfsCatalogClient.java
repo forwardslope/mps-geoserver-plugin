@@ -1,6 +1,7 @@
 package com.fsi.mps.geoserver.catalog;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.fsi.geomap.mps.wfsclient.GetFeature;
+import com.fsi.geomap.mps.wfsclient.Query.PropertyName;
 import com.fsi.geomap.mps.wfsclient.Query.TypeName;
 import com.fsi.geomap.mps.wfsclient.WfsClient;
 
@@ -29,18 +31,26 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 
 	private static final Logger log = Logger.getLogger(WfsCatalogClient.class.getName());
 	
-	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatures(GetFeature getFeature) {
-		return getFeatures(getFeature, false);
+	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatureMap(GetFeature getFeature) {
+		return getFeatureMap(getFeature, false);
 		
 	}
 
-	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatures(GetFeature getFeature, boolean supportPaging) {
+	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatureMap(GetFeature getFeature, boolean supportPaging) {
 		Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
 		if (catalog != null) {
 			for (com.fsi.geomap.mps.wfsclient.Query sourceQuery : getFeature.getQueries()) {
 				Query query = new Query();
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
+				List<PropertyName> propNameList = sourceQuery.getPropertyNames();
+				if (propNameList != null) {
+					List<String> propertyNames = new ArrayList<String>();
+					for (PropertyName propName : propNameList) {
+						propertyNames.add(propName.getName().getLocalPart());
+					}
+					query.setPropertyNames(propertyNames);
+				}
 				if (!supportPaging && getFeature.getMaxFeatures() >= 0) {
 					query.setMaxFeatures((int)getFeature.getMaxFeatures());
 				}
@@ -66,11 +76,12 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 	}
 
 
-	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(FeatureType featureType, GetFeature getFeature) {
-		return getFeatures(featureType, getFeature, false);
+	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(GetFeature getFeature) {
+		return getFeatures(getFeature, false);
 	}
 
-	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(FeatureType featureType, GetFeature getFeature, boolean supportPaging) {
+
+	public FeatureCollection<? extends FeatureType, ? extends Feature> getFeatures(GetFeature getFeature, boolean supportPaging) {
 		FeatureCollection<? extends FeatureType, ? extends Feature> featureCollection = null;
 		if (catalog != null) {
 			Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
@@ -80,6 +91,14 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 				Query query = new Query(getFeature.getQueries().get(0).getTypeName().get(0).getName().getLocalPart());
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
+				List<PropertyName> propNameList = sourceQuery.getPropertyNames();
+				if (propNameList != null) {
+					List<String> propertyNames = new ArrayList<String>();
+					for (PropertyName propName : propNameList) {
+						propertyNames.add(propName.getName().getLocalPart());
+					}
+					query.setPropertyNames(propertyNames);
+				}
 				if (!supportPaging && getFeature.getMaxFeatures() >= 0) {
 					query.setMaxFeatures((int)getFeature.getMaxFeatures());
 				}
