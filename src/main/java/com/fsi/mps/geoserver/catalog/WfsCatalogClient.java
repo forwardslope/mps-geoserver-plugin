@@ -44,7 +44,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
 				List<PropertyName> propNameList = sourceQuery.getPropertyNames();
-				if (propNameList != null) {
+				if (propNameList != null && propNameList.size() > 0) {
 					List<String> propertyNames = new ArrayList<String>();
 					for (PropertyName propName : propNameList) {
 						propertyNames.add(propName.getName().getLocalPart());
@@ -92,7 +92,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
 				List<PropertyName> propNameList = sourceQuery.getPropertyNames();
-				if (propNameList != null) {
+				if (propNameList != null && propNameList.size() > 0) {
 					List<String> propertyNames = new ArrayList<String>();
 					for (PropertyName propName : propNameList) {
 						propertyNames.add(propName.getName().getLocalPart());
