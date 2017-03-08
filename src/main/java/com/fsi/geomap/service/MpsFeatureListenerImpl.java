@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.geoserver.catalog.Catalog;
 import org.geoserver.catalog.FeatureTypeInfo;
@@ -25,7 +26,9 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
 import org.springframework.context.ApplicationContext;
+import org.xml.sax.SAXException;
 
+import com.fsi.geomap.mps.wfsclient.FeatureException;
 import com.fsi.geomap.mps.wfsclient.WfsNotifier;
 
 @Singleton
@@ -91,7 +94,7 @@ public class MpsFeatureListenerImpl implements MpsFeatureListener {
 										"Received Kafka CHANGED notification event for " + name.getURI() + "!");
 								notifier.processNotification(name, feature);
 								logger.log(Level.FINEST, "Processed CHANGED Kafka notification event for " + name + "!");
-							} catch (Exception e) {
+							} catch (FeatureException | IOException | SAXException | ParserConfigurationException e) {
 								logger.log(Level.WARNING, "Error processing Kafka CHANGED Notification! "
 										+ (e.getMessage() != null ? e.getMessage() : ""), e);
 							}
@@ -113,7 +116,7 @@ public class MpsFeatureListenerImpl implements MpsFeatureListener {
 											notifier.processNotification(name, feature);
 											logger.log(Level.FINEST, "Processed CHANGED non-Kafka notification event for " + name + "!");
 										}
-									} catch (Exception e) {
+									} catch (FeatureException | SAXException | ParserConfigurationException e) {
 										logger.log(Level.WARNING, "Error processing non-Kafka CHANGED Notification! "
 												+ (e.getMessage() != null ? e.getMessage() : ""), e);
 									}
