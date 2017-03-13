@@ -64,7 +64,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 							
 						}
 					} catch (IOException e) {
-						
+						Logger.getLogger(WfsCatalogClient.class.getName()).log(Level.WARNING, "Error retrieving FeatureCollections", e);
 					}
 					
 				}
