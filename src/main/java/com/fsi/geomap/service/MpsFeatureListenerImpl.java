@@ -71,6 +71,10 @@ public class MpsFeatureListenerImpl implements MpsFeatureListener {
 		try {
 
 			FeatureTypeInfo fti = catalog.getFeatureTypeByName(name);
+			if (fti == null) {
+				logger.log(Level.WARNING, "FeatureType " + name + " does not exist in GeoServer catalog, assuming external WFS!");
+				return null;
+			}
 			FeatureSource<? extends FeatureType, ? extends Feature> consumerFS = fti.getFeatureSource(null, null);
 			FeatureListener consumerFL = null;
 			logger.log(Level.INFO, "Registering a feature listener for feature type " + name.getURI() + ".");
