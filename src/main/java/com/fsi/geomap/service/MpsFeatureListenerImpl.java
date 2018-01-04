@@ -26,7 +26,7 @@ import org.opengis.feature.type.FeatureType;
 import org.opengis.feature.type.Name;
 import org.springframework.context.ApplicationContext;
 
-import com.fsi.geomap.mps.wfsclient.WfsNotifier;
+import com.fsi.geomap.mps.featureclient.FeatureNotifier;
 
 @Singleton
 
@@ -66,7 +66,7 @@ public class MpsFeatureListenerImpl implements MpsFeatureListener {
 	// i.e. the live consumer will only read data written after its
 	// instantiation
 
-	public FeatureListener registerListenerForFeature(final Name name, final WfsNotifier notifier)
+	public FeatureListener registerListenerForFeature(final Name name, final FeatureNotifier notifier)
 			throws IOException, FeatureListenerException {
 		try {
 

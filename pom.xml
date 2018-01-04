@@ -3,7 +3,7 @@
 
 	<groupId>com.fsi.geomap</groupId>
 	<artifactId>mps-geoserver-plugin</artifactId>
-	<version>5.0.0.1-SNAPSHOT</version>
+	<version>5.0.0.2-SNAPSHOT</version>
 
 	<name>MPS GeoServer Plugin</name>
 
@@ -24,7 +24,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.fsi.geomap</groupId>
-			<artifactId>mps-wfs-client</artifactId>
+			<artifactId>mps-feature-client</artifactId>
 			<version>5.0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

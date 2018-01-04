@@ -19,10 +19,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.fsi.geomap.mps.wfsclient.GetFeature;
-import com.fsi.geomap.mps.wfsclient.Query.PropertyName;
-import com.fsi.geomap.mps.wfsclient.Query.TypeName;
-import com.fsi.geomap.mps.wfsclient.WfsClient;
+import com.fsi.geomap.mps.featureclient.GetFeature;
+import com.fsi.geomap.mps.featureclient.Query.PropertyName;
+import com.fsi.geomap.mps.featureclient.Query.TypeName;
+import com.fsi.geomap.mps.featureclient.WfsClient;
 
 
 public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
@@ -39,7 +39,7 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 	public Map<Name, FeatureCollection<? extends FeatureType, ? extends Feature>> getFeatureMap(GetFeature getFeature, boolean supportPaging) {
 		Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
 		if (catalog != null) {
-			for (com.fsi.geomap.mps.wfsclient.Query sourceQuery : getFeature.getQueries()) {
+			for (com.fsi.geomap.mps.featureclient.Query sourceQuery : getFeature.getQueries()) {
 				Query query = new Query();
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
@@ -85,9 +85,9 @@ public class WfsCatalogClient implements WfsClient, ApplicationContextAware {
 		FeatureCollection<? extends FeatureType, ? extends Feature> featureCollection = null;
 		if (catalog != null) {
 			Map <Name, FeatureCollection<? extends FeatureType, ? extends Feature>> featureCollections = new HashMap<Name, FeatureCollection<? extends FeatureType, ? extends Feature>>();
-			List<com.fsi.geomap.mps.wfsclient.Query> sourceQueries = getFeature.getQueries();
+			List<com.fsi.geomap.mps.featureclient.Query> sourceQueries = getFeature.getQueries();
 			if (sourceQueries.size() == 1) {
-				com.fsi.geomap.mps.wfsclient.Query sourceQuery = sourceQueries.get(0);
+				com.fsi.geomap.mps.featureclient.Query sourceQuery = sourceQueries.get(0);
 				Query query = new Query(getFeature.getQueries().get(0).getTypeName().get(0).getName().getLocalPart());
 				query.setFilter(sourceQuery.getFilter());
 				query.setVersion(sourceQuery.getFeatureVersion());
